@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI vs Fake — Analyzer</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="popup-root">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">🕵️‍♀️</div>
+        <div>
+          <div class="title">AI vs Fake</div>
+          <div class="subtitle">Image authenticity detector</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <label class="input-label" for="image-url-input">Image URL</label>
+      <div class="input-row">
+        <input id="image-url-input" class="input" type="url" placeholder="Paste an image URL (https://...)" />
+        <button id="analyze-btn" class="btn primary">Analyze</button>
+      </div>
+
+      <div id="preview-card" class="preview-card hidden">
+        <div class="preview-left">
+          <img id="preview-img" alt="preview" />
+        </div>
+        <div class="preview-right">
+          <div id="status" class="status-text">Ready</div>
+          <div class="small-help">We won't upload images elsewhere — analysis runs on your local backend.</div>
+        </div>
+      </div>
+
+      <div id="loader" class="loader hidden" aria-hidden="true">
+        <svg class="spinner" viewBox="0 0 50 50">
+          <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="4"></circle>
+        </svg>
+        <div class="loader-text">Analyzing…</div>
+      </div>
+
+      <div id="result-container" class="result-card hidden">
+        <div class="result-left">
+          <div id="result-badge" class="badge">—</div>
+          <div id="result-label" class="result-label">—</div>
+        </div>
+        <div class="result-right">
+          <div class="prob-row">
+            <div class="prob-number" id="result-prob">0%</div>
+            <div class="prob-bar-wrap">
+              <div class="prob-bar-bg">
+                <div id="prob-bar" class="prob-bar-fill" style="width:0%"></div>
+              </div>
+            </div>
+          </div>
+          <div id="explain" class="explain">Confidence</div>
+        </div>
+      </div>
+
+      <div id="error-box" class="error-box hidden"></div>
+
+      <footer class="footer">
+        <small>Make sure backend is running at <code>http://127.0.0.1:5000</code></small>
+      </footer>
+    </main>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
