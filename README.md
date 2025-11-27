@@ -5,6 +5,7 @@
 A lightweight Chrome Extension integrated with a Flask backend
 to classify whether an image is REAL or AI-GENERATED using a 
 deep learning model (ResNet-50).
+<img width="1082" height="845" alt="Screenshot 2025-11-17 094105" src="https://github.com/user-attachments/assets/ec385c08-b363-4023-a483-739c3e0238a8" />
 
 ## 1. PROJECT OVERVIEW
 
@@ -116,6 +117,9 @@ Hardware Recommended:
 - Backend preprocesses & runs model inference
 - Model identifies REAL or AI-generated
 - Result shown in popup window
+
+  ### Resnet-50 model link: https://colab.research.google.com/drive/1qsgndAAx6FvU5f5RKhXmhXhuN8C-cxSe?usp=sharing
+  
 
 ## 9. RESULTS (SUMMARY)
  
