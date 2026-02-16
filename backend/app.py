@@ -301,11 +301,13 @@ def predict_b64():
 
 # ----- Run server -----
 if __name__ == "__main__":
-    # Ensure models dir exists
     if not MODEL_DIR.exists():
         try:
             MODEL_DIR.mkdir(parents=True, exist_ok=True)
         except Exception:
             pass
-    logger.info("Starting Flask server on 0.0.0.0:5000")
-    app.run(host="0.0.0.0", port=5000, debug=False)
+
+    port = int(os.environ.get("PORT", 5000))
+    logger.info(f"Starting Flask server on 0.0.0.0:{port}")
+    app.run(host="0.0.0.0", port=port, debug=False)
+
