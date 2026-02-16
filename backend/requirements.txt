@@ -1,7 +1,9 @@
 flask>=2.2.0
 flask-cors
 requests
-torch>=2.2.0
-torchvision
+torch==2.2.2+cpu
+torchvision==0.17.2+cpu
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 Pillow
 numpy==1.26.4
