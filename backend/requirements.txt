@@ -7,4 +7,4 @@ torchvision==0.17.2+cpu
 
 Pillow
 numpy==1.26.4
-gunicorn app:app
+gunicorn==21.2.0
