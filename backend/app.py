@@ -22,6 +22,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 import torch
+torch.set_num_threads(1)
 import torch.nn as nn
 from torchvision import models, transforms
 import numpy as np    
@@ -159,6 +160,27 @@ def try_load_model(path: Path) -> (Optional[nn.Module], bool):
 
     logger.error("All model loading attempts failed.")
     return None, False
+
+# ----- Auto-download model if missing -----
+MODEL_URL = "https://drive.google.com/uc?export=download&id=1wAe-6thEpK9Ss7rE6vaLzjpLcoDrrpiM"
+
+if not MODEL_PATH.exists():
+    logger.info("Model not found locally. Downloading from Google Drive...")
+
+    try:
+        MODEL_DIR.mkdir(parents=True, exist_ok=True)
+
+        with requests.get(MODEL_URL, stream=True) as r:
+            r.raise_for_status()
+            with open(MODEL_PATH, "wb") as f:
+                for chunk in r.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
+
+        logger.info("Model downloaded successfully.")
+
+    except Exception as e:
+        logger.exception(f"Failed to download model: {e}")
 
 # Try to load model at startup
 model, model_loaded = try_load_model(MODEL_PATH)
