@@ -1,20 +1,20 @@
 // background.js (service worker for manifest v3)
 // Context menu + Google Images / wrapper URL normalization
 
-const BACKEND_URL = "http://127.0.0.1:5000/predict-url";
+const BACKEND_URL = "https://extension-production-7890.up.railway.app/predict-url";
 
 // Create right-click menu on images
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
-    id: "analyze_image_ai_vs_fake",
-    title: "Analyze image (AI vs Fake)",
+    id: "analyze_image_ai_vs_real",
+    title: "Analyze image (AI vs Real)",
     contexts: ["image"]
   });
 });
 
 // When user chooses "Analyze image"
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (info.menuItemId !== "analyze_image_ai_vs_fake") return;
+  if (info.menuItemId !== "analyze_image_ai_vs_real") return;
 
   let imageUrl = info.srcUrl || info.pageUrl || null;
   if (!imageUrl) {
