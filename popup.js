@@ -7,7 +7,7 @@
      4) Show preview + loader, call backend, display result.
 */
 
-const BACKEND_URL = "http://127.0.0.1:5000/predict-url";
+const BACKEND_URL = "https://extension-production-7890.up.railway.app/predict-url";
 const qs = id => document.getElementById(id);
 
 function show(el) { el.classList.remove("hidden"); }
