@@ -26,6 +26,15 @@ torch.set_num_threads(1)
 import torch.nn as nn
 from torchvision import models, transforms
 import numpy as np    
+import gdown
+
+# ===== MODEL PATH CONFIG =====
+MODEL_DIR = "/app/models"
+MODEL_PATH = os.path.join(MODEL_DIR, "classifier_resnet50.pth")
+
+os.makedirs(MODEL_DIR, exist_ok=True)
+
+MODEL_URL = "https://colab.research.google.com/drive/1qsgndAAx6FvU5f5RKhXmhXhuN8C-cxSe?usp=sharing"
 
 # ----- Config -----
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -64,6 +73,10 @@ def get_resnet50_model(num_classes: int = 2) -> nn.Module:
     Build a ResNet50 and replace the final fc layer to `num_classes`.
     Use pretrained=False here because we'll load our own weights.
     """
+    # ===== AUTO DOWNLOAD MODEL =====
+    if not os.path.exists(MODEL_PATH):
+        print("⬇️ Downloading model from Drive...")
+        gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
     model = models.resnet50(pretrained=False)
     num_ftrs = model.fc.in_features
     model.fc = nn.Linear(num_ftrs, num_classes)
