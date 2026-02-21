@@ -29,12 +29,12 @@ import numpy as np
 import gdown
 
 # ===== MODEL PATH CONFIG =====
-MODEL_DIR = "/app/models"
-MODEL_PATH = os.path.join(MODEL_DIR, "classifier_resnet50.pth")
+# MODEL_DIR = "/models"
+# MODEL_PATH = os.path.join(MODEL_DIR, "classifier_resnet50.pth")
 
-os.makedirs(MODEL_DIR, exist_ok=True)
+# os.makedirs(MODEL_DIR, exist_ok=True)
 
-MODEL_URL = "https://colab.research.google.com/drive/1qsgndAAx6FvU5f5RKhXmhXhuN8C-cxSe?usp=sharing"
+# MODEL_URL = "https://colab.research.google.com/drive/1qsgndAAx6FvU5f5RKhXmhXhuN8C-cxSe?usp=sharing"
 
 # ----- Config -----
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -42,6 +42,10 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 MODEL_DIR = Path(__file__).parent / "models"
 FALLBACK_MODEL_PATH = Path("/mnt/data/classifier_resnet50.pth")
 MODEL_PATH = MODEL_DIR / "classifier_resnet50.pth"
+MODEL_DIR.mkdir(parents=True, exist_ok=True)
+
+MODEL_URL = "https://drive.google.com/uc?export=download&id=1wAe-6thEpK9Ss7rE6vaLzjpLcoDrrpiM"
+
 if not MODEL_PATH.exists() and FALLBACK_MODEL_PATH.exists():
     MODEL_PATH = FALLBACK_MODEL_PATH
 
@@ -68,20 +72,26 @@ preprocess = transforms.Compose([
 ])
 
 # ----- Model building helper -----
+# def get_resnet50_model(num_classes: int = 2) -> nn.Module:
+#     """
+#     Build a ResNet50 and replace the final fc layer to `num_classes`.
+#     Use pretrained=False here because we'll load our own weights.
+#     """
+#     # ===== AUTO DOWNLOAD MODEL =====
+#     if not os.path.exists(MODEL_PATH):
+#         print("⬇️ Downloading model from Drive...")
+#         gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
+#     model = models.resnet50(pretrained=False)
+#     num_ftrs = model.fc.in_features
+#     model.fc = nn.Linear(num_ftrs, num_classes)
+#     return model
+
 def get_resnet50_model(num_classes: int = 2) -> nn.Module:
-    """
-    Build a ResNet50 and replace the final fc layer to `num_classes`.
-    Use pretrained=False here because we'll load our own weights.
-    """
-    # ===== AUTO DOWNLOAD MODEL =====
-    if not os.path.exists(MODEL_PATH):
-        print("⬇️ Downloading model from Drive...")
-        gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
     model = models.resnet50(pretrained=False)
     num_ftrs = model.fc.in_features
     model.fc = nn.Linear(num_ftrs, num_classes)
     return model
-
+ 
 # We'll attempt to load with num_classes=2 first, but prediction code supports 1 or 2 outputs.
 model: Optional[nn.Module] = None
 model_loaded = False
@@ -176,24 +186,33 @@ def try_load_model(path: Path) -> (Optional[nn.Module], bool):
 
 # ----- Auto-download model if missing -----
 MODEL_URL = "https://drive.google.com/uc?export=download&id=1wAe-6thEpK9Ss7rE6vaLzjpLcoDrrpiM"
-
+# ----- Auto-download model if missing -----
 if not MODEL_PATH.exists():
     logger.info("Model not found locally. Downloading from Google Drive...")
-
     try:
         MODEL_DIR.mkdir(parents=True, exist_ok=True)
-
-        with requests.get(MODEL_URL, stream=True) as r:
-            r.raise_for_status()
-            with open(MODEL_PATH, "wb") as f:
-                for chunk in r.iter_content(chunk_size=8192):
-                    if chunk:
-                        f.write(chunk)
-
+        gdown.download(MODEL_URL, str(MODEL_PATH), quiet=False)
         logger.info("Model downloaded successfully.")
-
     except Exception as e:
         logger.exception(f"Failed to download model: {e}")
+# if not MODEL_PATH.exists():
+#     logger.info("Model not found locally. Downloading from Google Drive...")
+
+#     try:
+#         MODEL_DIR.mkdir(parents=True, exist_ok=True)
+
+#         with requests.get(MODEL_URL, stream=True) as r:
+#             r.raise_for_status()
+#             with open(MODEL_PATH, "wb") as f:
+#                 for chunk in r.iter_content(chunk_size=8192):
+#                     if chunk:
+#                         f.write(chunk)
+
+
+#         logger.info("Model downloaded successfully.")
+
+#     except Exception as e:
+#         logger.exception(f"Failed to download model: {e}")
 
 # Try to load model at startup
 model, model_loaded = try_load_model(MODEL_PATH)
