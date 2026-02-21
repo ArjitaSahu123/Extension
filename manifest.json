@@ -24,6 +24,7 @@
     "notifications"
   ],
   "host_permissions": [
+    "https://extension-production-7890.up.railway.app/*",
     "http://127.0.0.1/*",
     "http://localhost/*",
     "<all_urls>"
